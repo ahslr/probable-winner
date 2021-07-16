@@ -1,3 +1,7 @@
 import React from "react";
+import { withKit } from './KitContext';
 
-export const Title = ({ children }) => <h1>{children}</h1>;
+const Title = ({ user: { username } = {}, message = 'Hello' }) => <h1>{`${message} ${username}`}</h1>;
+
+const extraProps = ({ user }) => ({ user });
+export default withKit(extraProps)(Title);

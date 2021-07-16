@@ -27,7 +27,11 @@ module.exports = {
         use: {
           loader: "babel-loader"
         }
-      }
+      },
+      {
+        test: /\.(sass|less|css)$/,
+        use: ["style-loader", "css-loader"]
+      },
     ]
   },
   resolve: {

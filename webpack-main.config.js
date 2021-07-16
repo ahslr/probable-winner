@@ -7,7 +7,14 @@
 const webpack = require("webpack");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const glob = require("glob")
+const path = require("path")
 const remoteComponentConfig = require("./remote-component.config").resolve;
+
+const entry = glob.sync("src/views/**/index.js")
+  .reduce((x, y) => Object.assign(x, {
+    [path.basename(path.dirname(y))]: `./${y}`,
+  }), {});
 
 const externals = Object.keys(remoteComponentConfig).reduce(
   (obj, key) => ({ ...obj, [key]: key }),
@@ -26,9 +33,7 @@ module.exports = {
     }),
     new WebpackAssetsManifest()
   ],
-  entry: {
-    main: "./src/index.js"
-  },
+  entry,
   output: {
     libraryTarget: "commonjs"
   },
@@ -44,7 +49,11 @@ module.exports = {
         use: {
           loader: "babel-loader"
         }
-      }
+      },
+      {
+        test: /\.(sass|less|css)$/,
+        use: ["style-loader", "css-loader"]
+      },
     ]
   }
 };
